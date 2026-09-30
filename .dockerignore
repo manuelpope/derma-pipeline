@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+wheels/
+
+# Virtual env (built fresh inside the container)
+.venv/
+venv/
+env/
+
+# VCS
+.git/
+.gitignore
+.gitattributes
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Jupyter (not needed at runtime)
+*.ipynb
+.ipynb_checkpoints/
+
+# Tooling caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Local outputs from previous runs
+api_outputs/
+output/
+output_*/
+*.log
+
+# Documentation — keep README in the image but skip the rest
+LICENSE
+docs/
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Don't copy the lockfile-only staging dir or random files
+*.tmp
+*.bak

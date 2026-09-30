@@ -1,0 +1,24 @@
+[project]
+name = "derm-pipeline"
+version = "0.1.0"
+description = "Local dermatological image processing pipeline (segmentation, contour analysis, dynamic zoom via scale_factor) with CLI and FastAPI interfaces."
+authors = [
+    { name = "manueltobon", email = "manuelpope@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.141.1",
+    "matplotlib>=3.11.2",
+    "numpy>=2.4.6",
+    "opencv-python>=5.0.0.93",
+    "pandas>=3.0.6",
+    "python-multipart>=0.0.32",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+derm-pipeline = "derm_pipeline.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.10.11,<0.11.0"]
+build-backend = "uv_build"

@@ -1,0 +1,57 @@
+# Docker Compose for the derm-pipeline FastAPI service.
+#
+# Usage:
+#   docker compose up --build         # build image + start service in foreground
+#   docker compose up -d --build      # detached
+#   docker compose down               # stop + remove container (keeps volume)
+#   docker compose logs -f            # tail logs
+#
+# The service binds to http://localhost:8000 by default. Persistent artifacts
+# from `keep_artifacts=true` calls are stored in the `derm-outputs` named
+# volume and survive container restarts.
+#
+# Override any of the env vars below by creating a `.env` file in this
+# directory, e.g.:
+#
+#   DERM_PORT=9000
+#   DERM_LOG_LEVEL=warning
+
+services:
+  derm-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: derm-pipeline:local
+    container_name: derm-api
+    restart: unless-stopped
+    ports:
+      - "${DERM_PORT:-8000}:8000"
+    environment:
+      # Default location inside the container — matches the volume mount below.
+      API_OUTPUT_ROOT: /app/api_outputs
+      # Match the API_OUTPUT_ROOT inside the container; uvicorn reads its own
+      # log level from --log-level (see `command:` override).
+      PYTHONUNBUFFERED: "1"
+      # Reduce matplotlib font-cache warnings on first run.
+      MPLBACKEND: Agg
+    volumes:
+      # Persistent storage for keep_artifacts=true runs.
+      - derm-outputs:/app/api_outputs
+    healthcheck:
+      test:
+        - "CMD"
+        - "python"
+        - "-c"
+        - "import urllib.request, sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/health', timeout=3).getcode() == 200 else 1)"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    # Cap memory + CPU — opencv + matplotlib + per-request PNG buffers can
+    # grow fast on large images. 2 GB / 2 CPUs is comfortable for ~4 MP inputs.
+    mem_limit: 2g
+    cpus: "2.0"
+
+volumes:
+  derm-outputs:
+    name: derm-pipeline-outputs
