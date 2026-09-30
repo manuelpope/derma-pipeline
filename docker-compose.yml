@@ -13,7 +13,7 @@
 # Override any of the env vars below by creating a `.env` file in this
 # directory, e.g.:
 #
-#   DERM_PORT=9000
+#   DERM_PORT=9003
 #   DERM_LOG_LEVEL=warning
 
 services:
